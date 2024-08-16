@@ -77,6 +77,8 @@ def add_member():
     return render_template('add_member.html')
 
 # Endpoint to loan a book
+from datetime import datetime, timedelta
+
 @app.route('/loan_book', methods=['GET', 'POST'])
 def loan_book():
     if request.method == 'POST':
@@ -84,11 +86,13 @@ def loan_book():
         book_id = loan_details['book_id']
         member_id = loan_details['member_id']
         loan_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        due_date = (datetime.now() + timedelta(days=10)).strftime('%Y-%m-%d %H:%M:%S')
         
         conn = sqlite3.connect('library.db')
         c = conn.cursor()
         c.execute('UPDATE Books SET available = 0 WHERE book_id = ?', (book_id,))
-        c.execute('INSERT INTO Loans (book_id, member_id, loan_date) VALUES (?, ?, ?)', (book_id, member_id, loan_date))
+        c.execute('INSERT INTO Loans (book_id, member_id, loan_date, due_date) VALUES (?, ?, ?, ?)', 
+                  (book_id, member_id, loan_date, due_date))
         conn.commit()
         conn.close()
         
@@ -104,6 +108,7 @@ def loan_book():
     return render_template('loan_book.html', books=books, members=members)
 
 
+
 # Endpoint to return a book
 @app.route('/return_book', methods=['GET', 'POST'])
 def return_book():
@@ -114,12 +119,20 @@ def return_book():
         
         conn = sqlite3.connect('library.db')
         c = conn.cursor()
+        c.execute('SELECT due_date FROM Loans WHERE loan_id = ?', (loan_id,))
+        due_date = c.fetchone()[0]
+        
+        if datetime.strptime(return_date, '%Y-%m-%d %H:%M:%S') > datetime.strptime(due_date, '%Y-%m-%d %H:%M:%S'):
+            # ספר מוחזר באיחור - ניתן להוסיף כאן קוד לטיפול במקרים כאלה
+            print("The book was returned late")
+
         c.execute('UPDATE Loans SET return_date = ? WHERE loan_id = ?', (return_date, loan_id))
         c.execute('UPDATE Books SET available = 1 WHERE book_id = (SELECT book_id FROM Loans WHERE loan_id = ?)', (loan_id,))
         conn.commit()
         conn.close()
         
         return redirect(url_for('show_books'))
+    
     conn = sqlite3.connect('library.db')
     c = conn.cursor()
     c.execute('''
@@ -133,6 +146,7 @@ def return_book():
 
     conn.close()
     return render_template('return_book.html', loans=loans)
+
 
 @app.route('/update_book/<int:book_id>', methods=['GET', 'POST'])
 def update_book(book_id):

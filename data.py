@@ -55,3 +55,14 @@ for member in members:
 
 conn.commit()
 conn.close()
+
+import sqlite3
+
+conn = sqlite3.connect('library.db')
+c = conn.cursor()
+
+# הוספת עמודת due_date לטבלת ההשאלות (אם היא לא קיימת כבר)
+c.execute('ALTER TABLE Loans ADD COLUMN due_date TEXT')
+
+conn.commit()
+conn.close()
