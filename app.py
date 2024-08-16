@@ -51,15 +51,18 @@ def add_book():
         title = book_details['title']
         author = book_details['author']
         published_year = book_details['published_year']
-        
+        image_url = book_details.get('image_url', '')  # קבלת הקישור לתמונה
+
         conn = sqlite3.connect('library.db')
         c = conn.cursor()
-        c.execute('INSERT INTO Books (title, author, published_year, available) VALUES (?, ?, ?, 1)', (title, author, published_year))
+        c.execute('INSERT INTO Books (title, author, published_year, available, image_url) VALUES (?, ?, ?, 1, ?)', 
+                  (title, author, published_year, image_url))
         conn.commit()
         conn.close()
-        
+
         return redirect(url_for('show_books'))
     return render_template('add_book.html')
+
 
 # Endpoint to add a member
 @app.route('/add_member', methods=['GET', 'POST'])
@@ -159,9 +162,16 @@ def update_book(book_id):
         title = updated_details['title']
         author = updated_details['author']
         published_year = updated_details['published_year']
-        c.execute('UPDATE Books SET title = ?, author = ?, published_year=?  WHERE book_id = ?', (title, author,published_year , book_id))
+        image_url = updated_details.get('image_url', '')
+
+        c.execute('''
+            UPDATE Books
+            SET title = ?, author = ?, published_year = ?, image_url = ?
+            WHERE book_id = ?
+        ''', (title, author, published_year, image_url, book_id))
         conn.commit()
         conn.close()
+
         return redirect(url_for('show_books'))
 
     c.execute('SELECT * FROM Books WHERE book_id = ?', (book_id,))
@@ -169,6 +179,7 @@ def update_book(book_id):
     conn.close()
 
     return render_template('update_book.html', book=book)
+
 
 
 @app.route('/delete_book/<int:book_id>', methods=['POST'])

@@ -6,18 +6,26 @@
 
 {% block content %}
     <h1>Update Book</h1>
-    <form method="post">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="{{ book[1] }}"><br><br>
-
-        <label for="author">Author:</label>
-        <input type="text" id="author" name="author" value="{{ book[2] }}"><br><br>
-
-        <label for="published_year">Published year:</label>
-        <input type="number" id="published_year" name="published_year" value="{{ book[2] }}"><br><br>
-
-        <button type="submit">Update Book</button>
+    <form method="POST" action="{{ url_for('update_book', book_id=book[0]) }}">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ book[1] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" class="form-control" id="author" name="author" value="{{ book[2] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="published_year">Published Year</label>
+            <input type="number" class="form-control" id="published_year" name="published_year" value="{{ book[3] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="image_url">Image URL</label>
+            <input type="text" class="form-control" id="image_url" name="image_url" value="{{ book[5] }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Book</button>
     </form>
+    
     {% endblock %}
 
 

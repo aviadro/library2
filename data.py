@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS Books (
     title TEXT NOT NULL,
     author TEXT NOT NULL,
     published_year INTEGER NOT NULL,
+    image_url TEXT,
     available BOOLEAN NOT NULL CHECK (available IN (0, 1))
 )
 ''')
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS Loans (
     member_id INTEGER NOT NULL,
     loan_date TEXT NOT NULL,
     return_date TEXT,
+    due_date TEXT,
     FOREIGN KEY (book_id) REFERENCES Books(book_id),
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 )
@@ -61,8 +63,3 @@ import sqlite3
 conn = sqlite3.connect('library.db')
 c = conn.cursor()
 
-# הוספת עמודת due_date לטבלת ההשאלות (אם היא לא קיימת כבר)
-c.execute('ALTER TABLE Loans ADD COLUMN due_date TEXT')
-
-conn.commit()
-conn.close()

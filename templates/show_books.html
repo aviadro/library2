@@ -16,33 +16,34 @@
 
 
     </div>
-    <table class="table table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Published Year</th>
-                <th>Available</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
+        <h1 class="mt-4">Books</h1>
+        <div class="row">
             {% for book in books %}
-            <tr>
-                <td>{{ book[0] }}</td>
-                <td>{{ book[1] }}</td>
-                <td>{{ book[2] }}</td>
-                <td>{{ book[3] }}</td>
-                <td>{{ 'Yes' if book[4] else 'No' }}</td>
-                <td>
-                    <a href="{{ url_for('update_book', book_id=book[0]) }}" class="btn btn-sm btn-info">Update</a>
-                    <form method="post" action="{{ url_for('delete_book', book_id=book[0]) }}" style="display:inline;">
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    {% if book[5] %}
+                    <img src="{{ book[5] }}" class="card-img-top" alt="{{ book[1] }}" style="width: 100px; height: 150px;">
+                    {% else %}
+                    <img src="https://lh4.googleusercontent.com/proxy/hbnD1n-NUmkNpMo4tNhy8ekGWzO1rYrF_YSv5ulws2LdX_MuILQ94wohLnf0LkhbkjH6Do_QsFBLQ_dxgX9uK8Rm6VYthI5NWy73yp3hkjEvJp_DipwtFdYZEjoenKxSZQ" class="card-img-top" alt="{{ book[1] }}" style="width: 100px; height: 150px;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book[1] }}</h5>
+                        <p class="card-text">Author: {{ book[2] }}</p>
+                        <p class="card-text">Published: {{ book[3] }}</p>
+                        {% if book[4] %}
+                        <p class="card-text text-success">Available</p>
+                        {% else %}
+                        <p class="card-text text-danger">Not Available</p>
+                        {% endif %}
+                        <a href="{{ url_for('update_book', book_id=book[0]) }}" class="btn btn-info">Update</a>
+                        <form method="post" action="{{ url_for('delete_book', book_id=book[0]) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </div>
 {% endblock %}
