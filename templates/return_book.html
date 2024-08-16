@@ -12,9 +12,16 @@
             <label for="loan_id">Select Loan:</label>
             <select id="loan_id" name="loan_id" class="form-control">
                 {% for loan in loans %}
-                <option value="{{ loan[0] }}">
-                    Book: {{ loan[1] }} | Author: {{ loan[2] }} | Borrowed by: {{ loan[3] }}
-                </option>
+                <option value="{{ loan[0] }}">Book: {{ loan[1] }} | Author: {{ loan[2] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group mt-3">
+            <label for="member_id">Select Member:</label>
+            <select id="member_id" name="member_id" class="form-control">
+                {% for member in members %}
+                <option value="{{ member[0] }}">{{ member[1] }}</option>
                 {% endfor %}
             </select>
         </div>

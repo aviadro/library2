@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, flash, request, jsonify, render_template, redirect, url_for
 import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = 'supersecretkey'  # נדרש כדי להשתמש ב-flash
 
 
 # Endpoint to show list of books and their status
@@ -124,7 +125,7 @@ def return_book():
         
         if datetime.strptime(return_date, '%Y-%m-%d %H:%M:%S') > datetime.strptime(due_date, '%Y-%m-%d %H:%M:%S'):
             # ספר מוחזר באיחור - ניתן להוסיף כאן קוד לטיפול במקרים כאלה
-            print("The book was returned late")
+            flash("The book was returned late", 'danger')
 
         c.execute('UPDATE Loans SET return_date = ? WHERE loan_id = ?', (return_date, loan_id))
         c.execute('UPDATE Books SET available = 1 WHERE book_id = (SELECT book_id FROM Loans WHERE loan_id = ?)', (loan_id,))
