@@ -3,7 +3,7 @@
 
 {% block title %}Books{% endblock %}
 
-{% block header %}members {% endblock %}
+{% block header %}Members{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -15,13 +15,11 @@
             {% set books_with_dates = [] %}
             {% for loan in member_loans %}
                 {% if loan[0] == member[0] and loan[2] %}
-                {% set _ =books_with_dates.append(loan[2] ~ ' (Loaned on: ' ~ loan[3] ~ ')') %}
-
+                {% set _ = books_with_dates.append(loan[2] ~ ' (Loaned on: ' ~ loan[3] ~ ', Due date: ' ~ loan[4] ~ ')') %}
                 {% endif %}
             {% endfor %}
             {% if books_with_dates %}
             {{ books_with_dates|join('<br>')|safe }}
-
             {% else %}
                 No books currently loaned
             {% endif %}
@@ -33,5 +31,4 @@
         {% endfor %}
     </ul>
 </div>
-    {% endblock %}
-
+{% endblock %}

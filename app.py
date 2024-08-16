@@ -26,7 +26,7 @@ def show_members():
     
     # קבלת כל הספרים שהושאלו ושלא הוחזרו כולל תאריך ההשאלה
     c.execute('''
-    SELECT Members.member_id, Members.name, Books.title, Loans.loan_date 
+    SELECT Members.member_id, Members.name, Books.title, Loans.loan_date, Loans.due_date
     FROM Members
     LEFT JOIN Loans ON Members.member_id = Loans.member_id
     LEFT JOIN Books ON Loans.book_id = Books.book_id
