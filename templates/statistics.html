@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock %}
+
+{% block header %}Statistics{% endblock %}
+
+{% block content %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Statistics</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Library Statistics</h1>
+        <ul class="list-group">
+            <li class="list-group-item">Total Books: <strong>{{ total_books }}</strong></li>
+            <li class="list-group-item">Books Currently Loaned: <strong>{{ loaned_books }}</strong></li>
+            <li class="list-group-item">Total Members: <strong>{{ total_members }}</strong></li>
+            <li class="list-group-item">Books Available: <strong>{{ available_books }}</strong></li>
+        </ul>
+    </div>
+    {% endblock %}
+

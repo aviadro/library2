@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Search Books{% endblock %}
+
+{% block header %}Search for a Book{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="query">Search by Title or Author:</label>
+        <input type="text" id="query" name="query" value="{{ query }}" placeholder="Enter book title or author">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <br>
+
+    {% if books %}
+        <h2>Search Results:</h2>
+        <ul class="list-group">
+            {% for book in books %}
+                <li class="list-group-item">
+                    <strong>{{ book[1] }}</strong> by {{ book[2] }} (Published in {{ book[3] }}) - Available: 
+                    {% if book[4] %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% if query %}
+            <p>No books found for "{{ query }}".</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock %}
+
+{% block header %}The Library {% endblock %}
+{% block content %}
+<h3>{% if session%}hello {{session.username}}{%endif%}</h3>
+    <div class="mb-4">
+        <a href="{{ url_for('add_book') }}" class="btn btn-primary">Add Book</a>
+        <a href="{{ url_for('add_member') }}" class="btn btn-secondary">Add Member</a>
+        <a href="{{ url_for('loan_book') }}" class="btn btn-info">Loan Book</a>
+        <a href="{{ url_for('return_book') }}" class="btn btn-warning">Return Book</a>
+        <a href="{{ url_for('show_members') }}" class="btn btn-primary">show members status</a>
+        <a href="{{ url_for('search_books') }}"class="btn btn-info">Search Books</a>
+        <a href="{{ url_for('statistics') }}"class="btn btn-warning">Statistics</a>
+        <a href="{{ url_for('login') }}"class="btn btn-secondary">login</a>
+        {%if session%}<a href="{{ url_for('logout') }}"class="btn btn-primary">logout</a>{%endif%}<br>
+
+
+    </div>
+    <div class="container">
+        <h1 class="mt-4">Books</h1>
+        <div class="row">
+            {% for book in books %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    {% if book[5] %}
+                    <img src="{{ book[5] }}" class="card-img-top" alt="{{ book[1] }}" style="width: 100px; height: 150px;">
+                    {% else %}
+                    <img src="https://lh4.googleusercontent.com/proxy/hbnD1n-NUmkNpMo4tNhy8ekGWzO1rYrF_YSv5ulws2LdX_MuILQ94wohLnf0LkhbkjH6Do_QsFBLQ_dxgX9uK8Rm6VYthI5NWy73yp3hkjEvJp_DipwtFdYZEjoenKxSZQ" class="card-img-top" alt="{{ book[1] }}" style="width: 100px; height: 150px;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book[1] }}</h5>
+                        <p class="card-text">Author: {{ book[2] }}</p>
+                        <p class="card-text">Published: {{ book[3] }}</p>
+                        {% if book[4] %}
+                        <p class="card-text text-success">Available</p>
+                        {% else %}
+                        <p class="card-text text-danger">Not Available</p>
+                        {% endif %}
+                        <a href="{{ url_for('update_book', book_id=book[0]) }}" class="btn btn-info">Update</a>
+                        <form method="post" action="{{ url_for('delete_book', book_id=book[0]) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

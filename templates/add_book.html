@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock %}
+
+{% block header %}Add a Book{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Add a Book</h2>
+    <form method="post">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter book title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="author">Author:</label>
+            <input type="text" class="form-control" id="author" name="author" placeholder="Enter author name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="published_year">Published Year:</label>
+            <input type="number" class="form-control" id="published_year" name="published_year" placeholder="Enter published year" required>
+        </div>
+
+        <div class="form-group">
+            <label for="image_url">Image URL</label>
+            <input type="text" class="form-control" id="image_url" name="image_url">
+       </div>
+    
+       <button type="submit" class="btn btn-primary">Add Book</button>
+    </form>
+</div>
+{% endblock %}

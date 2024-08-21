@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock %}
+
+{% block header %}add a member {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Add Member</h1>
+    <form method="post" class="p-4 bg-light rounded shadow">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Enter member name" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-block mt-3">Add Member</button>
+    </form>
+</div>
+
+    {% endblock %}
+

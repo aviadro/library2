@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Library App{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .book-image {
+            width: 100px;
+            float: right;
+            margin: 10px;
+        }
+        body {
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://media1.giphy.com/media/VfK8uwEgsWawGtsSKO/giphy.gif?cid=6c09b952mdnsw2voe73e19c1gtwf05pfxuazy7lixumxa3b3&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=s" alt="Book" class="book-image">
+        <h1 class="text-center">{% block header %}Library App{% endblock %}</h1>
+        <hr>
+        <div class="content">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-secondary">Return to Main Menu</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

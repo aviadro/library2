@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock %}
+
+{% block header %}Members{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Members</h1>
+    <ul class="list-group">
+        {% for member in members %}
+        <li class="list-group-item">
+            <strong>{{ member[1] }}</strong> - <u>Books loaned:</u>
+            {% set books_with_dates = [] %}
+            {% for loan in member_loans %}
+                {% if loan[0] == member[0] and loan[2] %}
+                {% set _ = books_with_dates.append(loan[2] ~ ' (Loaned on: ' ~ loan[3] ~ ', Due date: ' ~ loan[4] ~ ')') %}
+                {% endif %}
+            {% endfor %}
+            {% if books_with_dates %}
+            {{ books_with_dates|join('<br>')|safe }}
+            {% else %}
+                No books currently loaned
+            {% endif %}
+            <a href="{{ url_for('update_member', member_id=member[0]) }}" class="btn btn-info btn-sm float-right ml-2">Update</a>
+            <form method="post" action="{{ url_for('delete_member', member_id=member[0]) }}" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm float-right">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

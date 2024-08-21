@@ -1,0 +1,34 @@
+    {% extends "base.html" %}
+
+    {% block title %}Books{% endblock %}
+    
+    {% block header %}Loan book {% endblock %}
+    
+    {% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Loan a Book</h1>
+        <form method="post" class="p-4 bg-light rounded shadow">
+            <div class="form-group">
+                <label for="book_id">Select Book:</label>
+                <select id="book_id" name="book_id" class="form-control">
+                    {% for book in books %}
+                    <option value="{{ book[0] }}">{{ book[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label for="member_id">Select Member:</label>
+                <select id="member_id" name="member_id" class="form-control">
+                    {% for member in members %}
+                    <option value="{{ member[0] }}">{{ member[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            <button type="submit" class="btn btn-primary btn-block mt-3">Loan Book</button>
+        </form>
+    </div>
+    
+    {% endblock %}
+
