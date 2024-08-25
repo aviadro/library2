@@ -22,6 +22,17 @@
         <h1 class="text-center">{% block header %}Library App{% endblock %}</h1>
         <hr>
         <div class="content">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
             {% block content %}{% endblock %}
         </div>
         <div class="text-center mt-4">

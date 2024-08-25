@@ -1,9 +1,16 @@
-from flask import Flask, flash, request, jsonify, render_template, redirect, url_for
+from flask import Flask, flash, request, jsonify, render_template, redirect, session, url_for
 import sqlite3
 from datetime import datetime
+from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
+import os
+
+# טוען את משתני הסביבה מהקובץ .env
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # נדרש כדי להשתמש ב-flash
+app.secret_key = os.getenv('SECRET_KEY')
+bcrypt = Bcrypt(app)
 
 
 # Endpoint to show list of books and their status
@@ -63,6 +70,31 @@ def add_book():
         return redirect(url_for('show_books'))
     return render_template('add_book.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        conn = sqlite3.connect('library.db')
+        conn.row_factory = sqlite3.Row  # This makes the rows dictionary-like
+        user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+        conn.close()
+
+        if user and bcrypt.check_password_hash(user['password'], password):
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            return redirect(url_for('show_books'))
+        else:
+            return "Invalid username or password."
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('username', None)
+    return redirect(url_for('show_books'))
 
 # Endpoint to add a member
 @app.route('/add_member', methods=['GET', 'POST'])
@@ -184,6 +216,9 @@ def update_book(book_id):
 
 @app.route('/delete_book/<int:book_id>', methods=['POST'])
 def delete_book(book_id):
+    if 'user_id' not in session:
+        flash('To delete, you need to login first.', "danger")
+        return redirect(url_for('show_books'))
     conn = sqlite3.connect('library.db')
     c = conn.cursor()
     c.execute('DELETE FROM Books WHERE book_id = ?', (book_id,))
@@ -213,6 +248,9 @@ def update_member(member_id):
 
 @app.route('/delete_member/<int:member_id>', methods=['POST'])
 def delete_member(member_id):
+    if 'user_id' not in session:
+        flash('To delete member, you need to login first.', "danger")
+        return redirect(url_for('show_members'))
     conn = sqlite3.connect('library.db')
     c = conn.cursor()
     c.execute('DELETE FROM Members WHERE member_id = ?', (member_id,))

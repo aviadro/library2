@@ -24,6 +24,14 @@ CREATE TABLE IF NOT EXISTS Members (
 ''')
 
 c.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL
+        )
+    ''')
+
+c.execute('''
 CREATE TABLE IF NOT EXISTS Loans (
     loan_id INTEGER PRIMARY KEY,
     book_id INTEGER NOT NULL,
@@ -54,6 +62,15 @@ for book in books:
 for member in members:
     c.execute('INSERT INTO Members (name) VALUES (?)', (member,))
 
+users = [
+    ('admin', 'admin123'),
+    ('user1', 'password1'),
+    ('user2', 'password2')
+]
+
+for user in users:
+    c.execute('INSERT INTO users (username, password) VALUES (?, ?)', user)
+
 
 conn.commit()
 conn.close()
@@ -63,3 +80,26 @@ import sqlite3
 conn = sqlite3.connect('library.db')
 c = conn.cursor()
 
+
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
+
+def hash_existing_passwords():
+    conn = sqlite3.connect('library.db')
+    c = conn.cursor()
+
+    # Retrieve all users
+    users = c.execute('SELECT id, password FROM users').fetchall()
+
+    # Hash each password and update the database
+    for user in users:
+        user_id = user[0]
+        plain_text_password = user[1]
+        hashed_password = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
+        c.execute('UPDATE users SET password = ? WHERE id = ?', (hashed_password, user_id))
+
+    conn.commit()
+    conn.close()
+
+hash_existing_passwords()

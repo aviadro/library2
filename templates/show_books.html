@@ -3,8 +3,8 @@
 {% block title %}Books{% endblock %}
 
 {% block header %}The Library {% endblock %}
-
 {% block content %}
+<h3>{% if session%}hello {{session.username}}{%endif%}</h3>
     <div class="mb-4">
         <a href="{{ url_for('add_book') }}" class="btn btn-primary">Add Book</a>
         <a href="{{ url_for('add_member') }}" class="btn btn-secondary">Add Member</a>
@@ -12,7 +12,9 @@
         <a href="{{ url_for('return_book') }}" class="btn btn-warning">Return Book</a>
         <a href="{{ url_for('show_members') }}" class="btn btn-primary">show members status</a>
         <a href="{{ url_for('search_books') }}"class="btn btn-info">Search Books</a>
-        <a href="{{ url_for('statistics') }}"class="btn btn-warning">Statistics</a><br>
+        <a href="{{ url_for('statistics') }}"class="btn btn-warning">Statistics</a>
+        <a href="{{ url_for('login') }}"class="btn btn-secondary">login</a>
+        {%if session%}<a href="{{ url_for('logout') }}"class="btn btn-primary">logout</a>{%endif%}<br>
 
 
     </div>
