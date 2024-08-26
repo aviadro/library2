@@ -1,3 +1,4 @@
+import os
 import psycopg2
 from psycopg2 import sql
 
@@ -5,7 +6,7 @@ from psycopg2 import sql
 conn = psycopg2.connect(
     dbname="library_vjk0",
     user="library_vjk0_user",
-    password="gYSyzMTs4lXbHtbBGyk7ZVcP1w3AHDCW",
+    password=os.getenv('PASSWORD'),
     host="dpg-cr6925jtq21c73bbihtg-a.oregon-postgres.render.com",
     port="5432"
 )
@@ -94,11 +95,11 @@ bcrypt = Bcrypt()
 
 def hash_existing_passwords():
     conn = psycopg2.connect(
-        dbname="library_vjk0",
-        user="library_vjk0_user",
-        password="gYSyzMTs4lXbHtbBGyk7ZVcP1w3AHDCW",
-        host="dpg-cr6925jtq21c73bbihtg-a.oregon-postgres.render.com",
-        port="5432"
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
     )
     c = conn.cursor()
 
