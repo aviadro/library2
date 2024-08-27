@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import os
-from psycopg2.extras import DictCursor  # ייבוא מפורש של DictCursor
+from psycopg2.extras import DictCursor,RealDictCursor  # ייבוא מפורש של DictCursor
 
 
 import psycopg2
@@ -94,6 +94,10 @@ def login():
         conn.row_factory = DictCursor  # שימוש ב-DictCursor לייצוג השורות כמילון
         user = conn.cursor().execute('SELECT * FROM users WHERE username = %s', (username,)).fetchone()
         conn.close()
+
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+            user = cursor.fetchone()
 
         if user and bcrypt.check_password_hash(user['password'], password):
             session['user_id'] = user['id']
