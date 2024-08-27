@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import os
+from psycopg2.extras import DictCursor  # ייבוא מפורש של DictCursor
+
 
 import psycopg2
 
@@ -89,7 +91,7 @@ def login():
         password = request.form['password']
         
         conn = get_db_connection()
-        conn.row_factory = psycopg2.extras.DictCursor  # This makes the rows dictionary-like
+        conn.row_factory = DictCursor  # שימוש ב-DictCursor לייצוג השורות כמילון
         user = conn.cursor().execute('SELECT * FROM users WHERE username = %s', (username,)).fetchone()
         conn.close()
 
