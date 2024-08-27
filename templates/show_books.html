@@ -13,7 +13,7 @@
         <a href="{{ url_for('show_members') }}" class="btn btn-primary">show members status</a>
         <a href="{{ url_for('search_books') }}"class="btn btn-info">Search Books</a>
         <a href="{{ url_for('statistics') }}"class="btn btn-warning">Statistics</a>
-        <a href="{{ url_for('login') }}"class="btn btn-secondary">login</a>
+        <a href="{{ url_for('login') }}"class="btn btn-secondary">login for staff</a>
         {%if session%}<a href="{{ url_for('logout') }}"class="btn btn-primary">logout</a>{%endif%}<br>
 
 
@@ -24,8 +24,8 @@
             {% for book in books %}
             <div class="col-md-4">
                 <div class="card mb-4">
-                    {% if book[5] %}
-                    <img src="{{ book[5] }}" class="card-img-top" alt="{{ book[1] }}" style="width: 100px; height: 150px;">
+                    {% if book[4] %}
+                    <img src="{{ book[4] }}" class="card-img-top" alt="{{ book[1] }}" style="width: 100px; height: 150px;">
                     {% else %}
                     <img src="https://lh4.googleusercontent.com/proxy/hbnD1n-NUmkNpMo4tNhy8ekGWzO1rYrF_YSv5ulws2LdX_MuILQ94wohLnf0LkhbkjH6Do_QsFBLQ_dxgX9uK8Rm6VYthI5NWy73yp3hkjEvJp_DipwtFdYZEjoenKxSZQ" class="card-img-top" alt="{{ book[1] }}" style="width: 100px; height: 150px;">
                     {% endif %}
@@ -33,7 +33,7 @@
                         <h5 class="card-title">{{ book[1] }}</h5>
                         <p class="card-text">Author: {{ book[2] }}</p>
                         <p class="card-text">Published: {{ book[3] }}</p>
-                        {% if book[4] %}
+                        {% if book[5] %}
                         <p class="card-text text-success">Available</p>
                         {% else %}
                         <p class="card-text text-danger">Not Available</p>

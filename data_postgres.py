@@ -1,14 +1,16 @@
 import os
 import psycopg2
 from psycopg2 import sql
+from dotenv import load_dotenv
+load_dotenv()  # זה חייב להיות בתחילת הקוד לפני קריאות ל-os.getenv
 
 # Connect to PostgreSQL database
 conn = psycopg2.connect(
-    dbname="library_vjk0",
-    user="library_vjk0_user",
-    password=os.getenv('PASSWORD'),
-    host="dpg-cr6925jtq21c73bbihtg-a.oregon-postgres.render.com",
-    port="5432"
+    dbname=os.getenv('DB_NAME'),
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    host=os.getenv('DB_HOST'),
+    port=os.getenv('DB_PORT')
 )
 c = conn.cursor()
 
@@ -70,6 +72,7 @@ members = [
 ]
 
 for book in books:
+    print(f"Inserting book: {book}")
     c.execute('INSERT INTO Books (title, author, published_year, image_url, available) VALUES (%s, %s, %s, %s, %s)', book)
 
 for member in members:
@@ -90,6 +93,7 @@ conn.close()
 # Reconnect to hash passwords
 import psycopg2
 from flask_bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash
 
 bcrypt = Bcrypt()
 
@@ -111,7 +115,7 @@ def hash_existing_passwords():
     for user in users:
         user_id = user[0]
         plain_text_password = user[1]
-        hashed_password = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
+        hashed_password = generate_password_hash(plain_text_password)
         c.execute('UPDATE users SET password = %s WHERE id = %s', (hashed_password, user_id))
 
     conn.commit()
@@ -119,3 +123,24 @@ def hash_existing_passwords():
 
 hash_existing_passwords()
 
+# conn = psycopg2.connect(
+#     dbname=os.getenv('DB_NAME'),
+#     user=os.getenv('DB_USER'),
+#     password=os.getenv('DB_PASSWORD'),
+#     host=os.getenv('DB_HOST'),
+#     port=os.getenv('DB_PORT')
+# )
+# c = conn.cursor()
+
+# # Create tables
+# c.execute('''
+# DROP TABLE IF EXISTS Loans CASCADE;
+# DROP TABLE IF EXISTS Books CASCADE;
+# DROP TABLE IF EXISTS Members CASCADE;
+# DROP TABLE IF EXISTS users CASCADE;
+
+
+# ''')
+  
+# conn.commit()
+# conn.close()

@@ -210,7 +210,7 @@ def update_book(book_id):
         title = updated_details['title']
         author = updated_details['author']
         published_year = updated_details['published_year']
-        image_url = updated_details.get('image_url', '')
+        image_url = updated_details.get('image_url', None)
 
         c.execute('''
             UPDATE Books
