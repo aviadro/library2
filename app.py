@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import os
 from psycopg2.extras import DictCursor,RealDictCursor  # ייבוא מפורש של DictCursor
+from werkzeug.security import check_password_hash
 
 
 import psycopg2
@@ -91,15 +92,15 @@ def login():
         password = request.form['password']
         
         conn = get_db_connection()
-        conn.row_factory = DictCursor  # שימוש ב-DictCursor לייצוג השורות כמילון
-        user = conn.cursor().execute('SELECT * FROM users WHERE username = %s', (username,)).fetchone()
+        
+        # יצירת cursor עם RealDictCursor כדי שהשורות יוחזרו כמילון
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+            user = cursor.fetchone()
+        
         conn.close()
 
-        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-            cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-            user = cursor.fetchone()
-
-        if user and bcrypt.check_password_hash(user['password'], password):
+        if user and check_password_hash(user['password'], password):
             session['user_id'] = user['id']
             session['username'] = user['username']
             return redirect(url_for('show_books'))
